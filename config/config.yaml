@@ -1,0 +1,45 @@
+# PK Clearance Predictor — Project Configuration
+
+# PK-DB API
+pkdb:
+  base_url: "https://pk-db.com/api/v1"
+  format: "json"
+  rate_limit_seconds: 1.0  # be polite to the API
+  primary_substances:
+    - caffeine
+    - acetaminophen
+    - midazolam
+
+# Database
+database:
+  sqlite_path: "data/pk_clearance.db"
+  echo: false  # SQLAlchemy logging
+
+# Data paths
+paths:
+  raw: "data/raw"
+  processed: "data/processed"
+  models: "models"
+
+# ML Configuration
+ml:
+  target: "clearance"
+  test_size: 0.2
+  random_state: 42
+  cv_folds: 5
+  models:
+    xgboost:
+      n_estimators: 200
+      max_depth: 6
+      learning_rate: 0.1
+    lasso:
+      alpha: 1.0
+      max_iter: 1000
+    random_forest:
+      n_estimators: 200
+      max_depth: 10
+
+# MLflow
+mlflow:
+  tracking_uri: "mlruns"
+  experiment_name: "pk-clearance-prediction"

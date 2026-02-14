@@ -1,0 +1,51 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment
+.env
+.env.local
+
+# Data (raw data stays local, not in git)
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.zip
+data/processed/*.csv
+data/processed/*.parquet
+
+# Database
+*.db
+*.sqlite3
+
+# ML artifacts
+models/*.joblib
+models/*.pkl
+mlruns/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Power BI (too large for git, share via NovyPro)
+powerbi/*.pbix
+
+# Keep folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!models/.gitkeep
+!powerbi/.gitkeep
