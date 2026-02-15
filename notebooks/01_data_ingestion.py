@@ -135,7 +135,7 @@ print("\n=== 6. Pulling caffeine study details ===")
 
 caffeine_studies = df_studies[
     df_studies['substances'].apply(
-        lambda x: 'caffeine' in str(x).lower() if pd.notna(x) else False
+        lambda x: 'caffeine' in str(x).lower()
     )
 ]
 print(f"Studies with caffeine: {len(caffeine_studies)}")
@@ -246,3 +246,39 @@ Hand off to Sachi:
   - Full individuals pull needs async/threaded client
   - Rate limit: 0.3s between requests minimum
 """)
+# %%
+# %%
+# %%
+# TDC ADME Datasets — Download via Harvard Dataverse proper URLs
+import requests, pandas as pd, os, io
+
+RAW_DIR = "data/raw"
+
+# These are the correct Dataverse access URLs from TDC metadata.py
+# Format: https://dataverse.harvard.edu/api/access/datafile/<ID>
+# IDs sourced from: github.com/mims-harvard/TDC/blob/main/tdc/metadata.py
+tdc_downloads = {
+    "clearance_hepatocyte_az": 4159589,
+    "clearance_microsome_az": 4159587,
+    "half_life_obach": 4159585,
+    "ppbr_az": 4159612,
+    "bioavailability_ma": 4159582,
+}
+
+for name, fid in tdc_downloads.items():
+    print(f"\n--- {name} ---")
+    url = f"https://dataverse.harvard.edu/api/access/datafile/{fid}"
+    try:
+        resp = requests.get(url, timeout=60, allow_redirects=True)
+        resp.raise_for_status()
+        # TDC stores as tab-separated files on Dataverse
+        df = pd.read_csv(io.BytesIO(resp.content), sep='\t')
+        outpath = f"{RAW_DIR}/tdc_{name}.csv"
+        df.to_csv(outpath, index=False)
+        print(f"  Rows: {len(df)} | Columns: {list(df.columns)}")
+        print(df.head(2))
+    except Exception as e:
+        print(f"  Failed: {e}")
+
+print("\n=== Done! ===")
+# %%
